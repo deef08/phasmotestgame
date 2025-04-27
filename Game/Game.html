@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phasmophobia Map Guessing Game</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-image: url('https://external-preview.redd.it/BBsduF0z0V6VNKUppkzyKrkb5RoXeRtNcsTXaPnQ_kg.png?width=1080&crop=smart&format=pjpg&auto=webp&s=974f42e2a70fdd555f82b4d2e5fb30ceb56849be'); /* Hintergrundbild */
+            background-size: cover;
+            background-position: center;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #game-container {
+            background-color: rgba(0, 0, 0, 0); /* Transparentes weißes Hintergrund */
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0);
+            text-align: center;
+            width: 450px;
+            max-width: 90%;
+        }
+
+        h1 {
+            font-size: 36px;
+            color: #00000000;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        #name-container {
+            margin-bottom: 20px;
+        }
+
+        #name-input {
+            padding: 12px;
+            width: 80%;
+            font-size: 18px;
+            margin-bottom: 20px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        #name-input:focus {
+            border-color: #38b2ac;
+        }
+
+        #game {
+            margin-bottom: 30px;
+            display: none;
+        }
+
+        #hint {
+            font-size: 18px;
+            color: #4a5568;
+            margin-bottom: 15px;
+            font-style: italic;
+        }
+
+        #map-image {
+            width: 80%;
+            height: auto;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        #user-input {
+            padding: 12px;
+            width: 80%;
+            font-size: 18px;
+            margin-bottom: 20px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        #user-input:focus {
+            border-color: #38b2ac;
+        }
+
+        button {
+            padding: 15px 25px;
+            font-size: 18px;
+            background-color: #38b2ac;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            width: 80%;
+        }
+
+        button:hover {
+            background-color: #319795;
+        }
+
+        button:active {
+            background-color: #2c7a7b;
+        }
+
+        #score {
+            font-size: 20px;
+            color: #2d3748;
+            margin-top: 20px;
+        }
+
+        #leaderboard {
+            margin-top: 30px;
+            text-align: left;
+            background-image: url('https://wallup.net/wp-content/uploads/2017/03/28/310787-forest-horror.jpg'); /* Hintergrundbild für das Leaderboard */
+            background-size: cover;
+            background-position: center;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        #leaderboard h2 {
+            font-size: 24px;
+            color: #ffffff;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-align: center;
+        }
+
+        #leaderboard-list {
+            list-style: none;
+            padding: 0;
+            font-size: 18px;
+            color: #ffffff;
+        }
+
+        #leaderboard-list li {
+            margin: 10px 0;
+            background-color: rgba(0, 0, 0, 0.6);
+            border-radius: 8px;
+            padding: 10px;
+            display: flex;
+            justify-content: space-between;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        #leaderboard-list li span {
+            font-weight: bold;
+        }
+
+        .leaderboard-item {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+        }
+
+        /* Für mobile Geräte */
+        @media (max-width: 600px) {
+            #game-container {
+                width: 90%;
+                padding: 15px;
+            }
+
+            h1 {
+                font-size: 28px;
+            }
+
+            button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="game-container">
+        <h1>Errate die Phasmophobia-Map!</h1>
+        
+        <!-- Nameingabe -->
+        <div id="name-container">
+            <input type="text" id="name-input" placeholder="Gib deinen Namen ein" />
+            <button id="start-btn">Spiel Starten</button>
+        </div>
+
+        <!-- Das Spiel -->
+        <div id="game">
+            <p id="hint">Kartenname: ???</p>
+            <img id="map-image" src="" alt="Map Image">
+            <input type="text" id="user-input" placeholder="Gib den Namen der Map ein">
+            <button id="submit-btn">Antwort abgeben</button>
+            <p id="score">Punkte: 0</p>
+        </div>
+        
+        <!-- Leaderboard -->
+        <div id="leaderboard">
+            <h2>Leaderboard</h2>
+            <ul id="leaderboard-list"></ul>
+        </div>
+    </div>
+
+    <script>
+        const maps = [
+            { name: "Tanglewood", image: "https://tse4.mm.bing.net/th/id/OIP.kfQDD5QU3RtLkdrh52OoUwHaEK?rs=1&pid=ImgDetMain" },
+            { name: "Bleasdale", image: "https://dotesports.com/wp-content/uploads/2025/03/bleasdale-farmhouse-exterior-phasmophobia.jpg" },
+            { name: "Edgefield", image: "https://tse1.mm.bing.net/th/id/OIP.jsFdQupGzMtKxEP8E6Su_gAAAA?rs=1&pid=ImgDetMain" },
+            { name: "Ridgeview", image: "https://cdn-ak.f.st-hatena.com/images/fotolife/s/smart_thomas/20221231/20221231005129.png" },
+            { name: "Grafton", image: "https://th.bing.com/th/id/R.644a52d6a8f11454a36aa1fbe12a3ab4?rik=VFIOo%2f1ti%2bf6zw&pid=ImgRaw&r=0" },
+            { name: "Willow", image: "https://tse4.mm.bing.net/th/id/OIP.7px0FFDHivBQk4coZXoizgAAAA?rs=1&pid=ImgDetMain" }
+
+            
+        ];
+
+        let currentMap = "";
+        let score = 0;
+        let playerName = "";
+        let leaderboard = JSON.parse(localStorage.getItem("leaderboard")) || [];
+
+        // Name des Spielers abfragen und Spiel starten
+        document.getElementById("start-btn").addEventListener("click", function() {
+            playerName = document.getElementById("name-input").value.trim();
+            if (playerName) {
+                document.getElementById("name-container").style.display = "none";
+                document.getElementById("game").style.display = "block";
+                startGame();
+            } else {
+                alert("Bitte gib deinen Namen ein.");
+            }
+        });
+
+        // Funktion, um eine neue Karte zu wählen
+        function getRandomMap() {
+            return maps[Math.floor(Math.random() * maps.length)];
+        }
+
+        // Funktion, um den Score anzuzeigen
+        function updateScore() {
+            document.getElementById("score").textContent = `Punkte: ${score}`;
+        }
+
+        // Funktion, um das Leaderboard anzuzeigen
+        function updateLeaderboard() {
+            const leaderboardList = document.getElementById("leaderboard-list");
+            leaderboardList.innerHTML = '';
+            
+            const sortedLeaderboard = leaderboard.sort((a, b) => b.score - a.score);
+            
+            sortedLeaderboard.forEach(item => {
+                const li = document.createElement("li");
+                li.classList.add("leaderboard-item");
+                li.innerHTML = `<span>${item.name}</span><span>${item.score} Punkte</span>`;
+                leaderboardList.appendChild(li);
+            });
+        }
+
+        // Spiel starten
+        function startGame() {
+            currentMap = getRandomMap();
+            document.getElementById("hint").textContent = `Kartenname: ???`;
+            document.getElementById("map-image").src = currentMap.image;
+            updateScore();
+        }
+
+        // Antwort des Spielers verarbeiten
+        document.getElementById("submit-btn").addEventListener("click", function() {
+            const userGuess = document.getElementById("user-input").value.trim();
+            if (userGuess.toLowerCase() === currentMap.name.toLowerCase()) {
+                score += 1;
+                alert("Richtig! Du hast die Karte erraten.");
+            } else {
+                alert(`Falsch! Die richtige Antwort war: ${currentMap.name}`);
+            }
+            document.getElementById("user-input").value = "";
+            currentMap = getRandomMap();
+            startGame();
+            updateScore();
+            saveLeaderboard();
+            updateLeaderboard();
+        });
+
+        // Leaderboard speichern
+        function saveLeaderboard() {
+            if (playerName) {
+                const existingPlayerIndex = leaderboard.findIndex(item => item.name === playerName);
+                if (existingPlayerIndex !== -1) {
+                    leaderboard[existingPlayerIndex].score = score; 
+                } else {
+                    leaderboard.push({ name: playerName, score: score });
+                }
+                localStorage.setItem("leaderboard", JSON.stringify(leaderboard));
+            }
+        }
+
+        // Leaderboard beim Laden anzeigen
+        window.onload = function() {
+            updateLeaderboard();
+        };
+    </script>
+</body>
+</html>
